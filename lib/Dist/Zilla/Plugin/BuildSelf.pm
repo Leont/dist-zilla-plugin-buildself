@@ -1,7 +1,7 @@
 package Dist::Zilla::Plugin::BuildSelf;
 
 use Moose;
-with qw/Dist::Zilla::Role::BuildPL Dist::Zilla::Role::TextTemplate/;
+with qw/Dist::Zilla::Role::BuildPL Dist::Zilla::Role::TextTemplate Dist::Zilla::Role::PrereqSource/;
 
 use Dist::Zilla::File::InMemory;
 
@@ -18,6 +18,11 @@ has version => (
 );
 
 sub register_prereqs {
+	my ($self) = @_;
+
+	my $reqs = $self->zilla->prereqs->requirements_for('runtime', 'requires');
+	$self->zilla->register_prereqs({ phase => 'configure' }, %{ $reqs->as_string_hash });
+
 	return;
 }
 
