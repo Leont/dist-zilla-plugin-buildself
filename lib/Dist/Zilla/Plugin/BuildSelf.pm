@@ -42,3 +42,7 @@ no Moose;
 1;
 
 # ABSTRACT: Build a Build.PL that uses the current module to build itself
+
+=head1 DESCRIPTION
+
+Unless you're writing a Build.PL compatible module builder, you should not be looking at this. The only purpose of this module is to bootstrap any such module on Dist::Zilla.
