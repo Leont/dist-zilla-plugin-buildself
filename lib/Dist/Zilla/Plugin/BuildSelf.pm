@@ -5,6 +5,12 @@ with qw/Dist::Zilla::Role::BuildPL Dist::Zilla::Role::TextTemplate Dist::Zilla::
 
 use Dist::Zilla::File::InMemory;
 
+has add_buildpl => (
+	is => 'ro',
+	isa => 'Bool',
+	default => 1,
+);
+
 has template => (
 	is  => 'ro',
 	isa => 'Str',
@@ -42,9 +48,11 @@ sub register_prereqs {
 sub setup_installer {
 	my ($self, $arg) = @_;
 
-	my $content = $self->fill_in_string($self->template, { module => $self->module, version => $self->version });
-	my $file = Dist::Zilla::File::InMemory->new({ name => 'Build.PL', content => $content });
-	$self->add_file($file);
+	if ($self->add_buildpl) {
+		my $content = $self->fill_in_string($self->template, { module => $self->module, version => $self->version });
+		my $file = Dist::Zilla::File::InMemory->new({ name => 'Build.PL', content => $content });
+		$self->add_file($file);
+	}
 
 	return;
 }
