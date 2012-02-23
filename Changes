@@ -1,6 +1,8 @@
 Revision history for Dist-Zilla-Plugin-BuildSelf
 
 {{$NEXT}}
+
+0.002     2012-02-23 14:17:27 Europe/Amsterdam
           Added auto_configure_requires parameter, change default to false
 
 0.001     2011-05-02 09:19:27 Europe/Bucharest
