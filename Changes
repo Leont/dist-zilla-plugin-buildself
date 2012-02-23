@@ -1,6 +1,7 @@
 Revision history for Dist-Zilla-Plugin-BuildSelf
 
 {{$NEXT}}
+          Added auto_configure_requires parameter, change default to false
 
 0.001     2011-05-02 09:19:27 Europe/Bucharest
-         Initial release
+          Initial release

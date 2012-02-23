@@ -24,6 +24,12 @@ has module => (
 	lazy => 1,
 );
 
+has auto_configure_requires => (
+	is => 'ro',
+	isa => 'Bool',
+	default => 0,
+);
+
 sub _module_builder {
 	my $self = shift;
 	(my $name = $self->zilla->name) =~ s/-/::/g;
@@ -39,8 +45,10 @@ has version => (
 sub register_prereqs {
 	my ($self) = @_;
 
-	my $reqs = $self->zilla->prereqs->requirements_for('runtime', 'requires');
-	$self->zilla->register_prereqs({ phase => 'configure' }, %{ $reqs->as_string_hash });
+	if ($self->auto_configure_requires) {
+		my $reqs = $self->zilla->prereqs->requirements_for('runtime', 'requires');
+		$self->zilla->register_prereqs({ phase => 'configure' }, %{ $reqs->as_string_hash });
+	}
 
 	return;
 }
