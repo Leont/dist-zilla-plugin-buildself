@@ -2,6 +2,7 @@ Revision history for Dist-Zilla-Plugin-BuildSelf
 
 {{$NEXT}}
           Get rid of version attribute
+          Add minimumperl attribute
 
 0.002     2012-02-23 14:17:27 Europe/Amsterdam
           Added auto_configure_requires parameter, change default to false

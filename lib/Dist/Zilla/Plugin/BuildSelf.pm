@@ -14,7 +14,7 @@ has add_buildpl => (
 has template => (
 	is  => 'ro',
 	isa => 'Str',
-	default => "use lib 'lib';\nuse {{ \$module }};\nBuild_PL(\@ARGV);\n",
+	default => "use {{ \$minimum_perl }};\nuse lib 'lib';\nuse {{ \$module }};\nBuild_PL(\@ARGV);\n",
 );
 
 has module => (
@@ -29,6 +29,17 @@ has auto_configure_requires => (
 	isa => 'Bool',
 	default => 0,
 );
+
+has minimum_perl => (
+	is      => 'ro',
+	isa     => 'Str',
+	lazy    => 1,
+	default => sub {
+		my $self = shift;
+		return $self->zilla->prereqs->requirements_for('runtime', 'requires')->requirements_for_module('perl') || '5.006'
+	},
+);
+
 
 sub _module_builder {
 	my $self = shift;
@@ -51,7 +62,7 @@ sub setup_installer {
 	my ($self, $arg) = @_;
 
 	if ($self->add_buildpl) {
-		my $content = $self->fill_in_string($self->template, { module => $self->module });
+		my $content = $self->fill_in_string($self->template, { module => $self->module, minimum_perl => $self->minimum_perl });
 		my $file = Dist::Zilla::File::InMemory->new({ name => 'Build.PL', content => $content });
 		$self->add_file($file);
 	}
@@ -73,9 +84,13 @@ Unless you're writing a Build.PL compatible module builder, you should not be lo
 
 The module used to build the current module. Defaults to the main module of the current distribution.
 
+=attr minimum_perl
+
+The minimal version of perl needed to run this Build.PL. It defaults to the current runtime requirements' value for C<perl>, or C<5.006> otherwise.
+
 =attr template
 
-The template to use for the Build.PL script. This is a Text::Template string with the argument as described above: C<$module>. Default is typical for the author's Build.PL ideas, YMMV.
+The template to use for the Build.PL script. This is a Text::Template string with the arguments as described above: C<$module> and C<$minimum_perl>. Default is typical for the author's Build.PL ideas, YMMV.
 
 =for Pod::Coverage
 register_prereqs
