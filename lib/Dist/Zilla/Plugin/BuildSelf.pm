@@ -14,7 +14,7 @@ has add_buildpl => (
 has template => (
 	is  => 'ro',
 	isa => 'Str',
-	default => "use lib 'lib';\nuse {{ \$module }} {{ \$version }};\nBuild_PL(\@ARGV);\n",
+	default => "use lib 'lib';\nuse {{ \$module }};\nBuild_PL(\@ARGV);\n",
 );
 
 has module => (
@@ -36,12 +36,6 @@ sub _module_builder {
 	return $name;
 }
 
-has version => (
-	is  => 'ro',
-	isa => 'Str',
-	default => '',
-);
-
 sub register_prereqs {
 	my ($self) = @_;
 
@@ -57,7 +51,7 @@ sub setup_installer {
 	my ($self, $arg) = @_;
 
 	if ($self->add_buildpl) {
-		my $content = $self->fill_in_string($self->template, { module => $self->module, version => $self->version });
+		my $content = $self->fill_in_string($self->template, { module => $self->module });
 		my $file = Dist::Zilla::File::InMemory->new({ name => 'Build.PL', content => $content });
 		$self->add_file($file);
 	}
@@ -79,13 +73,9 @@ Unless you're writing a Build.PL compatible module builder, you should not be lo
 
 The module used to build the current module. Defaults to the main module of the current distribution.
 
-=attr version
-
-The minimal version of the module, if any. Defaults to none.
-
 =attr template
 
-The template to use for the Build.PL script. This is a Text::Template string with two arguments as described above: C<$module> and C<$version>. Default is typical for the authors Build.PL ideas, YMMV.
+The template to use for the Build.PL script. This is a Text::Template string with the argument as described above: C<$module>. Default is typical for the author's Build.PL ideas, YMMV.
 
 =for Pod::Coverage
 register_prereqs
