@@ -1,6 +1,8 @@
 Revision history for Dist-Zilla-Plugin-BuildSelf
 
 {{$NEXT}}
+
+0.003     2013-05-25 19:38:02 Europe/Amsterdam
           Get rid of version attribute
           Add minimumperl attribute
 
