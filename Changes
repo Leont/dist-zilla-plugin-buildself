@@ -1,6 +1,8 @@
 Revision history for Dist-Zilla-Plugin-BuildSelf
 
 {{$NEXT}}
+
+0.004     2015-03-08 17:58:36+01:00 Europe/Amsterdam
           Adapt to new argument passing scheme in Build.PL
 
 0.003     2013-05-25 19:38:02 Europe/Amsterdam
