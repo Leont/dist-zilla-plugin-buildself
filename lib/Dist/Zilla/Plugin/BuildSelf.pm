@@ -14,7 +14,7 @@ has add_buildpl => (
 has template => (
 	is  => 'ro',
 	isa => 'Str',
-	default => "use {{ \$minimum_perl }};\nuse lib 'lib';\nuse {{ \$module }};\nBuild_PL(\@ARGV);\n",
+	default => "use {{ \$minimum_perl }};\nuse lib 'lib';\nuse {{ \$module }};\nBuild_PL(\\\@ARGV, \\\%ENV);\n",
 );
 
 has module => (
