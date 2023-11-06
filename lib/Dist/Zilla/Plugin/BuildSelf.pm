@@ -43,6 +43,11 @@ has minimum_perl => (
 	},
 );
 
+has sanatize_for => (
+	is => 'ro',
+	isa => 'Str',
+	default => 0,
+);
 
 sub _module_builder($self) {
 	return $self->zilla->name =~ s/-/::/gr;
@@ -50,7 +55,12 @@ sub _module_builder($self) {
 
 sub register_prereqs($self) {
 	if ($self->auto_configure_requires) {
-		my $reqs = $self->zilla->prereqs->requirements_for('runtime', 'requires');
+		my $prereqs = $self->zilla->prereqs;
+		if (my $for = $self->sanatize_for) {
+			require CPAN::Meta::Prereqs::Filter;
+			$prereqs = CPAN::Meta::Prereqs::Filter::filter_prereqs($prereqs, omit_core => $for);
+		}
+		my $reqs = $prereqs->requirements_for('runtime', 'requires');
 		$self->zilla->register_prereqs({ phase => 'configure' }, $reqs->as_string_hash->%*);
 	}
 }
@@ -80,6 +90,10 @@ If enabled it will generate a F<Build.PL> file for you. Defaults to true if no B
 =attr auto_configure_requires
 
 If enabled it will automatically add the runtime requirements of the dist to the configure requirements.
+
+=attr sanatize_for
+
+If non-zero it will filter modules provided by the given perl version from the configure dependencies.
 
 =attr module
 
