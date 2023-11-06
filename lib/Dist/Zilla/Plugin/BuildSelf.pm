@@ -3,6 +3,8 @@ package Dist::Zilla::Plugin::BuildSelf;
 use Moose;
 with qw/Dist::Zilla::Role::BuildPL Dist::Zilla::Role::TextTemplate Dist::Zilla::Role::PrereqSource/;
 
+use experimental 'signatures', 'postderef';
+
 use Dist::Zilla::File::InMemory;
 
 has add_buildpl => (
@@ -34,40 +36,29 @@ has minimum_perl => (
 	is      => 'ro',
 	isa     => 'Str',
 	lazy    => 1,
-	default => sub {
-		my $self = shift;
+	default => sub($self) {
 		return $self->zilla->prereqs->requirements_for('runtime', 'requires')->requirements_for_module('perl') || '5.006'
 	},
 );
 
 
-sub _module_builder {
-	my $self = shift;
-	(my $name = $self->zilla->name) =~ s/-/::/g;
-	return $name;
+sub _module_builder($self) {
+	return $self->zilla->name =~ s/-/::/gr;
 }
 
-sub register_prereqs {
-	my ($self) = @_;
-
+sub register_prereqs($self) {
 	if ($self->auto_configure_requires) {
 		my $reqs = $self->zilla->prereqs->requirements_for('runtime', 'requires');
-		$self->zilla->register_prereqs({ phase => 'configure' }, %{ $reqs->as_string_hash });
+		$self->zilla->register_prereqs({ phase => 'configure' }, $reqs->as_string_hash->%*);
 	}
-
-	return;
 }
 
-sub setup_installer {
-	my ($self, $arg) = @_;
-
+sub setup_installer($self) {
 	if ($self->add_buildpl) {
 		my $content = $self->fill_in_string($self->template, { module => $self->module, minimum_perl => $self->minimum_perl });
 		my $file = Dist::Zilla::File::InMemory->new({ name => 'Build.PL', content => $content });
 		$self->add_file($file);
 	}
-
-	return;
 }
 
 __PACKAGE__->meta->make_immutable;
