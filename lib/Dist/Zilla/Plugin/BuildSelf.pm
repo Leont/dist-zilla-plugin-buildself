@@ -92,8 +92,3 @@ The minimal version of perl needed to run this Build.PL. It defaults to the curr
 =attr template
 
 The template to use for the Build.PL script. This is a Text::Template string with the arguments as described above: C<$module> and C<$minimum_perl>. Default is typical for the author's Build.PL ideas, YMMV.
-
-=for Pod::Coverage
-register_prereqs
-setup_installer
-=end
