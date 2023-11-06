@@ -1,6 +1,7 @@
 Revision history for Dist-Zilla-Plugin-BuildSelf
 
 {{$NEXT}}
+          - Set better defaults for add_buildpl and auto_configure_requires
 
 0.004     2015-03-08 17:58:36+01:00 Europe/Amsterdam
           Adapt to new argument passing scheme in Build.PL

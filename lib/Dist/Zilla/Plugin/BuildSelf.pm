@@ -10,7 +10,9 @@ use Dist::Zilla::File::InMemory;
 has add_buildpl => (
 	is => 'ro',
 	isa => 'Bool',
-	default => 1,
+	default => sub($self) {
+		return not grep { $_->name eq 'Build.PL' } $self->zilla->files->@*;
+	},
 );
 
 has template => (
@@ -29,7 +31,7 @@ has module => (
 has auto_configure_requires => (
 	is => 'ro',
 	isa => 'Bool',
-	default => 0,
+	default => 1,
 );
 
 has minimum_perl => (
@@ -70,6 +72,14 @@ no Moose;
 =head1 DESCRIPTION
 
 Unless you're writing a Build.PL compatible module builder, you should not be looking at this. The only purpose of this module is to bootstrap any such module on Dist::Zilla.
+
+=attr add_buildpl
+
+If enabled it will generate a F<Build.PL> file for you. Defaults to true if no Build.PL file is given.
+
+=attr auto_configure_requires
+
+If enabled it will automatically add the runtime requirements of the dist to the configure requirements.
 
 =attr module
 
