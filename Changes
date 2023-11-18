@@ -1,6 +1,7 @@
 Revision history for Dist-Zilla-Plugin-BuildSelf
 
 {{$NEXT}}
+          - Make add_buildpl detection lazy
 
 0.005     2023-11-07 18:05:40+01:00 Europe/Brussels
           - Set better defaults for add_buildpl and auto_configure_requires

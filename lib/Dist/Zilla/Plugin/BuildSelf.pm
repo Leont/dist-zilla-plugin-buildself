@@ -10,6 +10,7 @@ use Dist::Zilla::File::InMemory;
 has add_buildpl => (
 	is => 'ro',
 	isa => 'Bool',
+	lazy => 1,
 	default => sub($self) {
 		return not grep { $_->name eq 'Build.PL' } $self->zilla->files->@*;
 	},
