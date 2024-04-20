@@ -3,13 +3,16 @@ package Dist::Zilla::Plugin::BuildSelf;
 use Moose;
 with qw/Dist::Zilla::Role::BuildPL Dist::Zilla::Role::TextTemplate Dist::Zilla::Role::PrereqSource/;
 
+use MooseX::Types::Perl qw/StrictVersionStr/;
+use MooseX::Types::Moose qw/Str Bool/;
+
 use experimental 'signatures', 'postderef';
 
 use Dist::Zilla::File::InMemory;
 
 has add_buildpl => (
 	is => 'ro',
-	isa => 'Bool',
+	isa => Bool,
 	lazy => 1,
 	default => sub($self) {
 		return not grep { $_->name eq 'Build.PL' } $self->zilla->files->@*;
@@ -18,13 +21,13 @@ has add_buildpl => (
 
 has template => (
 	is  => 'ro',
-	isa => 'Str',
+	isa => Str,
 	default => "use {{ \$minimum_perl }};\nuse lib 'lib';\nuse {{ \$module }};\nBuild_PL(\\\@ARGV, \\\%ENV);\n",
 );
 
 has module => (
 	is => 'ro',
-	isa => 'Str',
+	isa => Str,
 	builder => '_module_builder',
 	lazy => 1,
 );
@@ -37,7 +40,7 @@ has auto_configure_requires => (
 
 has minimum_perl => (
 	is      => 'ro',
-	isa     => 'Str',
+	isa     => StrictVersionStr,
 	lazy    => 1,
 	default => sub($self) {
 		return $self->zilla->prereqs->requirements_for('runtime', 'requires')->requirements_for_module('perl') || '5.006'
